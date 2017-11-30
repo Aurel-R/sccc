@@ -1,10 +1,10 @@
 CC = gcc
 LEX = lex
 YACC = yacc -d
-CFLAGS = -O2 -Wall
-LDFLAGS = -ly -lfl # Linux: -lfl / OSX: -ll
+CFLAGS = -O2 -Wall -DDEBUG
+LDFLAGS = -ly -lfl -DDEBUG# Linux: -lfl / OSX: -ll
 EXEC = expr
-SRC =  symbol.c quad.c utils.h
+SRC =  symbol.c quad.c utils.c
 OBJ = $(SRC:.c=.o)
 
 all: $(OBJ) y.tab.c lex.yy.c

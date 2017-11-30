@@ -23,38 +23,72 @@ static struct quad *quad_list = NULL;
 	} codegen;
 }
 
+%token PRINT
 %token <string> IDENTIFIER
 %token <value> NUMBER
-%type <codegen> expression
+%type <codegen> expression instrlist instr
 
 %left '+'
 %left '*'
 
+%start instrlist
+
 %%
 
-axiom:
-expression '\n' { 
-	D(("Match :-) !"));
-	return 0;
+instrlist:
+  instr ';' instrlist { 
+	$$.code = NULL;
+	quad_add(&$$.code, $1.code);
+	quad_add(&$$.code, $3.code);
+	quad_list = $$.code; 
+} 
+| instr { 
+	$$.code = NULL;
+	quad_add(&$$.code, $1.code); 
+	quad_list = $$.code;	
 };
+
+
+instr:
+IDENTIFIER '=' expression {
+	D(("instr -> IDENTIFIER (%s) = expression", $1));
+	$$.code = NULL;
+	$$.result = symbol_lookup(symbol_table, $1);
+	if ($$.result == NULL)
+		$$.result = symbol_add(&symbol_table, $1);
+	quad_add(&$$.code, $3.code);
+	quad_add(&$$.code, quad_gen(ASSIGN, $$.result, $3.result, NULL));
+}
+
+| PRINT IDENTIFIER {
+	D(("instr -> PRINT IDENTIFIER (%s)", $2));
+	struct symbol *s = symbol_lookup(symbol_table, $2);
+	if (!s) {
+		fprintf(stderr, "'%s' undeclared\n", $2);
+		return 1;
+	}
+	$$.code = quad_gen(SYS_PRINT, NULL, s, NULL);
+	$$.result = NULL;
+};
+
 
 expression:
 expression '+' expression { 
 	D(("expression -> expression + expression"));
+	$$.code = NULL;
 	$$.result = newtemp(&symbol_table);
-	quad_add(&quad_list, $1.code);
-	quad_add(&quad_list, $3.code);
-	quad_add(&quad_list, quad_gen(ADD, $$.result, $1.result, $3.result));
-	$$.code = quad_list;
+	quad_add(&$$.code, $1.code);
+	quad_add(&$$.code, $3.code);
+	quad_add(&$$.code, quad_gen(ADD, $$.result, $1.result, $3.result)); 
 }
   	
 | expression '*' expression {
 	D(("expression -> expression * expression"));
+	$$.code = NULL;
 	$$.result = newtemp(&symbol_table);
-	quad_add(&quad_list, $1.code);
-	quad_add(&quad_list, $3.code);
-	quad_add(&quad_list, quad_gen(MUL, $$.result, $1.result, $3.result));
-	$$.code = quad_list;		
+	quad_add(&$$.code, $1.code);
+	quad_add(&$$.code, $3.code);
+	quad_add(&$$.code, quad_gen(MUL, $$.result, $1.result, $3.result));
 }
 	
 | '(' expression ')' {
@@ -66,8 +100,10 @@ expression '+' expression {
 | IDENTIFIER {
 	D(("expression -> IDENTIFIER (%s)", $1));
 	$$.result = symbol_lookup(symbol_table, $1);
-	if ($$.result == NULL)
-		$$.result = symbol_add(&symbol_table, $1);
+	if ($$.result == NULL) {
+		fprintf(stderr, "'%s' undeclared\n", $1);
+		return 1;
+	}
 	$$.code = NULL;
 }
 
@@ -88,12 +124,17 @@ void yyerror(char *s)
 
 int main(void) 
 {
-	printf("Enter an arithmetic expression:\n");
-	yyparse();
+	int ret = yyparse();
+	
+	if (ret)
+		goto end;
+
 	printf("-----------------\nSymbol table:\n");
 	symbol_print(symbol_table);
  	printf("-----------------\nQuad list:\n");
 	quad_print(quad_list);
+	/* gen MIPS */ 	
+end:
 	quad_free(quad_list);
 	symbol_free(symbol_table);
 	lex_free();

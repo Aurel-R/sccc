@@ -8,10 +8,11 @@ number		[1-9][0-9]*
 
 %%
 
+"print"		{ return PRINT; }
 {identifier}	{ yylval.string = strdup(yytext); return IDENTIFIER; }
 {number}	{ yylval.value = atoi(yytext); return NUMBER; }
-[()+*]		{ return yytext[0]; }
-\n		{ return yytext[0]; }
+[()+*=;]	{ return yytext[0]; }
+[[:space:]]	;
 .		{ fprintf(stderr, "Unknow character: %s\n", yytext); }
 
 %%

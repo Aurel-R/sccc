@@ -2,6 +2,8 @@
 #define H_QUAD_H
 
 enum operand {
+	SYS_PRINT = 1,
+	ASSIGN,
 	ADD,
 	MUL
 };

@@ -6,17 +6,16 @@
 
 void quad_add(struct quad **quad_list, struct quad *quad)
 {
-
-	if (*quad_list == NULL)
+	if (*quad_list == NULL) {
 		*quad_list = quad;
-	else
+	} else if (!(*quad_list)->last){
+		(*quad_list)->next = quad;
+		(*quad_list)->last = quad;
+	} else {
 		(*quad_list)->last->next = quad;
+		(*quad_list)->last = quad;
+	}
 	
-	if (quad)
-		quad->next = NULL;
-	
-	if (*quad_list && quad)	
-		(*quad_list)->last = quad;	
 }
 
 struct quad *quad_gen(enum operand op, struct symbol *res, 
@@ -33,6 +32,8 @@ struct quad *quad_gen(enum operand op, struct symbol *res,
 	new->res = res;
 	new->arg1 = arg1;
 	new->arg2 = arg2;
+	new->next = NULL;
+	new->last = NULL;
 	return new;
 }
 
