@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "symbol.h"
 #include "quad.h"
+#include "mips.h"
 #include "utils.h"
 
 int yylex(void);
@@ -133,10 +134,10 @@ int main(void)
 	symbol_print(symbol_table);
  	printf("-----------------\nQuad list:\n");
 	quad_print(quad_list);
-	/* gen MIPS */ 	
+	mips_gencode(symbol_table, quad_list);	/* gen MIPS */ 	
 end:
 	quad_free(quad_list);
 	symbol_free(symbol_table);
 	lex_free();
-  	return 0;
+  	return ret;
 }
