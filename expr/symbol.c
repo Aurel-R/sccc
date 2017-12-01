@@ -6,15 +6,22 @@
 
 struct symbol *symbol_lookup(struct symbol *table, const char *name)
 {
-	for (; table != NULL && strcmp(table->name, name); table = table->next);
+	for (; table != NULL && strcmp(table->name + 1, name); 
+	       table = table->next);
 	return table;	
 }
 
 struct symbol *symbol_add(struct symbol **table, const char *name)
 {
-	struct symbol *sym = calloc(1, sizeof(struct symbol));
+	struct symbol *sym;
+
+	/* XXX: check this in lex directly */
+	if (strlen(name) >= NAME_LEN - 1) {
+		fprintf(stderr, "var name lenght '%s' is too long\n", name);
+		return NULL;
+	}
  
-	if (!sym) {
+	if ((sym = calloc(1, sizeof(struct symbol))) == NULL) {
 		perror("calloc");
 		return NULL;
 	}
@@ -25,7 +32,9 @@ struct symbol *symbol_add(struct symbol **table, const char *name)
 		(*table)->last->next = sym;
 
 	(*table)->last = sym;
-	memcpy(sym->name, name, NAME_LEN); 
+	/* prefix symbol name to avoid collision */ 
+	*sym->name = '_'; 
+	memcpy(sym->name + 1, name, strlen(name)); 
 	sym->next = NULL;
 	return sym;
 }
