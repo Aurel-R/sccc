@@ -53,43 +53,71 @@ instrlist:
 instr:
 IDENTIFIER '=' expression {
 	D(("instr -> IDENTIFIER (%s) = expression", $1));
+	struct quad *quad;
 	$$.code = NULL;
 	$$.result = symbol_lookup(symbol_table, $1);
 	if ($$.result == NULL)
 		$$.result = symbol_add(&symbol_table, $1);
+	if ($$.result == NULL)	
+		return 1;
+	
+	quad = quad_gen(ASSIGN, $$.result, $3.result, NULL);
+	if (!quad)
+		return 1;
+
 	quad_add(&$$.code, $3.code);
-	quad_add(&$$.code, quad_gen(ASSIGN, $$.result, $3.result, NULL));
+	quad_add(&$$.code, quad);
 }
 
 | PRINT IDENTIFIER {
 	D(("instr -> PRINT IDENTIFIER (%s)", $2));
 	struct symbol *s = symbol_lookup(symbol_table, $2);
+
 	if (!s) {
 		fprintf(stderr, "'%s' undeclared\n", $2);
 		return 1;
 	}
-	$$.code = quad_gen(SYS_PRINT, NULL, s, NULL);
+
 	$$.result = NULL;
+	$$.code = quad_gen(SYS_PRINT, NULL, s, NULL);
+	if (!$$.code)
+		return 1;
 };
 
 
 expression:
 expression '+' expression { 
 	D(("expression -> expression + expression"));
+	struct quad *quad;
 	$$.code = NULL;
 	$$.result = newtemp(&symbol_table);
+	if (!$$.result)
+		return 1;
+
+	quad = quad_gen(ADD, $$.result, $1.result, $3.result);
+	if (!quad)
+		return 1;
+
 	quad_add(&$$.code, $1.code);
 	quad_add(&$$.code, $3.code);
-	quad_add(&$$.code, quad_gen(ADD, $$.result, $1.result, $3.result)); 
+	quad_add(&$$.code, quad); 
 }
   	
 | expression '*' expression {
 	D(("expression -> expression * expression"));
+	struct quad *quad;
 	$$.code = NULL;
 	$$.result = newtemp(&symbol_table);
+	if (!$$.result)
+		return 1;
+
+	quad = quad_gen(MUL, $$.result, $1.result, $3.result);
+	if (!quad)
+		return 1;
+	
 	quad_add(&$$.code, $1.code);
 	quad_add(&$$.code, $3.code);
-	quad_add(&$$.code, quad_gen(MUL, $$.result, $1.result, $3.result));
+	quad_add(&$$.code, quad);
 }
 	
 | '(' expression ')' {
@@ -111,6 +139,9 @@ expression '+' expression {
 | NUMBER {
 	D(("expression -> NUMBER (%d)", $1));
 	$$.result = newtemp(&symbol_table);
+	if (!$$.result)
+		return 1;
+
 	$$.result->type = CONST;
 	$$.result->value = $1;
 	$$.code = NULL;
@@ -127,15 +158,15 @@ int main(void)
 {
 	int ret = yyparse();
 	
-	if (ret)
-		goto end;
+	if (!ret)
+		mips_gencode(symbol_table, quad_list);
 
+/*
 	printf("-----------------\nSymbol table:\n");
 	symbol_print(symbol_table);
  	printf("-----------------\nQuad list:\n");
 	quad_print(quad_list);
-	mips_gencode(symbol_table, quad_list);	/* gen MIPS */ 	
-end:
+*/
 	quad_free(quad_list);
 	symbol_free(symbol_table);
 	lex_free();
