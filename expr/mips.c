@@ -25,7 +25,6 @@ static inline void assign_code(struct quad *quad)
 
 static inline void sys_print_code(struct quad *quad)
 {
-	/* XXX: label with '@' ? (&quad->arg1->name[1]) -> id collision */ 
 	printf("\tli $v0,1\n\tlw $a0,%s\n\tsyscall\n", quad->arg1->name);
 }
 

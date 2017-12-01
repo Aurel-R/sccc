@@ -35,7 +35,7 @@ struct symbol *newtemp(struct symbol **table)
 	static unsigned i = 1;
 	char name[NAME_LEN] = { 0 };
 
-	snprintf(name, NAME_LEN, "@temp_%d", i++);
+	snprintf(name, NAME_LEN, "temp_%d", i++);
 	return symbol_add(table, name);
 }
 
