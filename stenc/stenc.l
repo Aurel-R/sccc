@@ -4,7 +4,7 @@
 %}
 
 identifier	[a-zA-Z_][0-9a-zA-Z_]*
-number		[1-9][0-9]*
+number		[0-9]*
 
 %%
 
@@ -27,7 +27,7 @@ number		[1-9][0-9]*
 "<"		{ return LT; }
 "<="		{ return LE; }
 {identifier}	{ yylval.string = strdup(yytext); return ID; }
-{number}	{ yylval.value = atoi(yytext); return NUM; }
+{number}	{ yylval.value = atoi(yytext); return NUM; /* assume octal to be an int */ }
 [(){}+\-*/!=;]	{ return yytext[0]; }
 [[:space:]]	;
 .		{ fprintf(stderr, "Unknow character: %s\n", yytext); }

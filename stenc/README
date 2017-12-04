@@ -1,0 +1,21 @@
+test1.stenc SYNTAX OK
+test2.stenc SYNTAX ERROR -> il est normalement autorisé d'avoir {} vide, sans 
+			    instructions à la suite, n'importe où dans la fonction
+				(grammaire à revoir)
+
+Manques grammaire (pour le moement) :
+- Une seule fonction supportée (main, sans argument)
+- Un seul type (int) (ajout du type 'void' + 'char' + prefix 'unsigned' à prévoir)
+- pas de tableaux (pour le moment)
+- pas de virgules
+- pas d'évaluation conditionnel d'ID ou d'entier ( int x = 1; if (x) { blabla } ) 
+- pas de 'else if'
+- chaque structure conditionelle (boucle, if, etc) doit être suivie de bloc '{' '}' 
+- pas de label ni de goto
+- pas de switch case
+- pas de break; continue;
+- bloc vide non recommandé ( int main() { blabla  { }  return 0;}
+- pas de commantaires
+- pas d'opérateur Unaire (À ajouter pour expr) : &, |, ^, ~,
+- pas d'opétateur ternaire ( int y = ( x == 13) ? x - y : x + y;
+- liste non exhaustive....
