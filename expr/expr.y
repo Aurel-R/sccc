@@ -141,7 +141,6 @@ expression '+' expression {
 	$$.result = newtemp(&symbol_table);
 	if (!$$.result)
 		return 1;
-
 	$$.result->type = CONST;
 	$$.result->value = $1;
 	$$.code = NULL;

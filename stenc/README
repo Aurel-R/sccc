@@ -3,19 +3,23 @@ test2.stenc SYNTAX ERROR -> il est normalement autorisé d'avoir {} vide, sans
 			    instructions à la suite, n'importe où dans la fonction
 				(grammaire à revoir)
 
-Manques grammaire (pour le moement) :
-- Une seule fonction supportée (main, sans argument)
-- Un seul type (int) (ajout du type 'void' + 'char' + prefix 'unsigned' à prévoir)
+Propriétés de la grammaire (liste non exhaustive) :
+- une seule fonction supportée (main, sans argument)
+- un seul type (int) (ajout du type 'void' + 'char' + prefix 'unsigned' à prévoir)
+- pas de type abstrait (struct union enum)
 - pas de tableaux (pour le moment)
 - pas de virgules
-- pas d'évaluation conditionnel d'ID ou d'entier ( int x = 1; if (x) { blabla } ) 
+- pas d'évaluation conditionnelle d'id ou d'entier ( int x = 1; if (x) { ... } ) 
 - pas de 'else if'
 - chaque structure conditionelle (boucle, if, etc) doit être suivie de bloc '{' '}' 
 - pas de label ni de goto
 - pas de switch case
 - pas de break; continue;
-- bloc vide non recommandé ( int main() { blabla  { }  return 0;}
-- pas de commantaires
+- bloc 'anonyme' non recommandé ( int main() { int x = 1;  { /* empty (or not) bloc */ }  return x;}
+- commantaires AINSI (/* */) non supportés
 - pas d'opérateur Unaire (À ajouter pour expr) : &, |, ^, ~,
-- pas d'opétateur ternaire ( int y = ( x == 13) ? x - y : x + y;
-- liste non exhaustive....
+- pas de support pour les expr de type += -= *= /= |= &= ^=
+- pas d'opétateur ternaire ( y = ( x == 13) ? x - z : x + z; )
+- variables initialisées à 0 par défaut
+- la grammaire possède un operateur 'print(id);'
+- la fonction principale (main) retourne 0 par défaut

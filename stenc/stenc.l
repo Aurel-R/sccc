@@ -8,8 +8,6 @@ number		[0-9]*
 
 %%
 
-"++"		{ return PP; }
-"--"		{ return MM; }
 "int"		{ return INT; }
 "main"		{ return MAIN; }
 "return"	{ return RETURN; }
@@ -26,6 +24,7 @@ number		[0-9]*
 ">="		{ return GE; }
 "<"		{ return LT; }
 "<="		{ return LE; }
+"//".*		;
 {identifier}	{ yylval.string = strdup(yytext); return ID; }
 {number}	{ yylval.value = atoi(yytext); return NUM; /* assume octal to be an int */ }
 [(){}+\-*/!=;]	{ return yytext[0]; }
