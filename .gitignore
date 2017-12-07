@@ -2,6 +2,7 @@ stenc/stenc
 expr/expr
 *.yy.c
 *.o
+*.s
 y.tab.c
 y.tab.h
 y.output

@@ -93,8 +93,65 @@ instr:
 ;
 
 conditional_struct:
-  WHILE '(' conditional ')' bloc 	{}
-| FOR '(' single ';' conditional ';' single ')' bloc	{}
+  WHILE '(' conditional ')' bloc {
+	struct quad *true_label_quad, *false_label_quad;
+	struct quad *loop_label_quad, *loop_quad;
+	struct symbol *loop_label = newlabel(&symbol_table);
+	struct symbol *true_label = newlabel(&symbol_table);
+	struct symbol *false_label = newlabel(&symbol_table);
+
+	if (!loop_label || !true_label || !false_label)
+		return 1;
+
+	true_label_quad = quad_gen(ADD_LABEL, true_label, NULL, NULL);
+	false_label_quad = quad_gen(ADD_LABEL, false_label, NULL, NULL);
+	loop_label_quad = quad_gen(ADD_LABEL, loop_label, NULL, NULL);
+	loop_quad = quad_gen(GOTO, loop_label, NULL, NULL);
+	if (!true_label_quad || !false_label_quad ||
+	    !loop_label_quad || !loop_quad)
+		return 1;
+
+	empty_quad_complete($3.true_list, true_label);
+	empty_quad_complete($3.false_list, false_label);
+	quad_add(&$$.code, loop_label_quad);
+	quad_add(&$$.code, $3.code);
+	quad_add(&$$.code, true_label_quad);
+	quad_add(&$$.code, $5.code);
+	quad_add(&$$.code, loop_quad);
+	quad_add(&$$.code, false_label_quad);
+	/* TODO: free true and false list*/
+}
+| FOR '(' single ';' conditional ';' single ')' bloc	{
+	struct quad *true_label_quad, *false_label_quad;
+	struct quad *loop_label_quad, *loop_quad;
+	struct symbol *loop_label = newlabel(&symbol_table);
+	struct symbol *true_label = newlabel(&symbol_table);
+	struct symbol *false_label = newlabel(&symbol_table);
+
+	if (!loop_label || !true_label || !false_label)
+		return 1;
+
+	true_label_quad = quad_gen(ADD_LABEL, true_label, NULL, NULL);
+	false_label_quad = quad_gen(ADD_LABEL, false_label, NULL, NULL);
+	loop_label_quad = quad_gen(ADD_LABEL, loop_label, NULL, NULL);
+	loop_quad = quad_gen(GOTO, loop_label, NULL, NULL);
+	if (!true_label_quad || !false_label_quad ||
+	    !loop_label_quad || !loop_quad)
+		return 1;
+
+	empty_quad_complete($5.true_list, true_label);
+	empty_quad_complete($5.false_list, false_label);
+	quad_add(&$$.code, $3.code);
+	quad_add(&$$.code, loop_label_quad);
+	quad_add(&$$.code, $5.code);
+	quad_add(&$$.code, true_label_quad);
+	quad_add(&$$.code, $9.code);
+	quad_add(&$$.code, $7.code);
+	quad_add(&$$.code, loop_quad);
+	quad_add(&$$.code, false_label_quad);
+	/* TODO: free true and false list*/
+
+}
 | IF '(' conditional ')' bloc	{ 
 	struct quad *true_label_quad, *false_label_quad;
 	struct symbol *true_label = newlabel(&symbol_table);
@@ -131,7 +188,7 @@ conditional_struct:
 	end_label_quad = quad_gen(ADD_LABEL, end_label, NULL, NULL);
 	endif_jmp = quad_gen(GOTO, end_label, NULL, NULL);
 	if (!true_label_quad || !false_label_quad || 
-	    !end_label_quad || !endif_jmp)
+	    !end_label_quad  || !endif_jmp)
 		return 1;
 
 	empty_quad_complete($3.true_list, true_label); 
