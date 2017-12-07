@@ -1,11 +1,12 @@
-test1.stenc SYNTAX OK
-test2.stenc SYNTAX ERROR -> il est normalement autorisé d'avoir {} vide, sans 
-			    instructions à la suite, n'importe où dans la fonction
-				(grammaire à revoir)
+Compilateur expr
+
+$ make
+$ ./stenc < testX.stenc > testX.s
+$ spim -file testX.s -execute testX.s
 
 Propriétés de la grammaire (liste non exhaustive) :
 - une seule fonction supportée (main, sans argument)
-- un seul type (int) (ajout du type 'void' + 'char' + prefix 'unsigned' à prévoir)
+- un seul type (int) 
 - pas de type abstrait (struct union enum)
 - pas de tableaux (pour le moment)
 - pas de virgules

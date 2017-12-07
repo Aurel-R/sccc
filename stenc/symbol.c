@@ -39,6 +39,21 @@ struct symbol *symbol_add(struct symbol **table, const char *name)
 	return sym;
 }
 
+struct symbol *newlabel(struct symbol **table)
+{
+	struct symbol *sym;
+	static unsigned i = 1;
+	char name[NAME_LEN] = { 0 };
+
+	snprintf(name, NAME_LEN, "L%d", i++);
+	sym = symbol_add(table, name);
+	if (!sym)
+		return NULL;
+	
+	sym->type = LABEL;
+	return sym;
+}
+
 struct symbol *newtemp(struct symbol **table)
 {
 	static unsigned i = 1;

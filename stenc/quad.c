@@ -6,8 +6,8 @@
 
 static inline void reach_last_no_empty(struct quad **quad_list, struct quad *quad)
 {
-	if (quad && quad->last) 
-		(*quad_list)->last = quad->last;
+	if (quad)
+		(*quad_list)->last = (quad->last) ? quad->last : quad;
 }
 
 static inline void reach_last_empty(struct quad **quad_list, struct quad *quad)
@@ -75,3 +75,47 @@ void quad_free(struct quad *quad)
 		free(q);	
 	}
 }
+
+
+void empty_quad_new(struct empty_quad **list, struct quad *quad)
+{
+	*list = malloc(sizeof(struct empty_quad));
+
+	if (!(*list)) {
+		perror("malloc");
+		return;
+	}
+
+	(*list)->quad = quad;
+	(*list)->next = NULL;
+}
+
+struct empty_quad *empty_quad_cat(struct empty_quad *l1, struct empty_quad *l2)
+{
+	struct empty_quad *new_list = l1;
+	
+	for (; l1->next; l1 = l1->next);
+	
+	l1->next = l2;
+	return new_list;
+}
+
+
+void empty_quad_complete(struct empty_quad *list, struct symbol *s)
+{
+	for (; list; list = list->next)
+		list->quad->res = s;
+}
+
+void empty_quad_free(struct empty_quad *list) 
+{
+	struct empty_quad *q;
+
+	while ((q = list) != NULL) {
+		list = q->next;
+		free(q);
+	}
+}
+
+
+

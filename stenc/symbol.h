@@ -2,16 +2,21 @@
 #define H_SYMBOL_H
 
 #define NAME_LEN	128
-#define CONST		1
+
+enum symbol_type {
+	CONST = 1,
+	LABEL
+};
 
 struct symbol {
-	char name[NAME_LEN];
-	int type; /* TODO: replace with enum */
 	int value;
+	char name[NAME_LEN];
+	enum symbol_type type; 
 	struct symbol *next;
 	struct symbol *last;
 };
 
+struct symbol *newlabel(struct symbol **table);
 struct symbol *newtemp(struct symbol **table);
 struct symbol *symbol_add(struct symbol **table, const char *name);
 struct symbol *symbol_lookup(struct symbol *table, const char *name);
