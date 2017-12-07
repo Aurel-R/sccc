@@ -1,4 +1,4 @@
-Compilateur expr
+Compilateur stenc
 
 $ make
 $ ./stenc < testX.stenc > testX.s
