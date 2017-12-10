@@ -2,16 +2,21 @@
 #define H_SYMBOL_H
 
 #define NAME_LEN	128
+#define MAX_DIM		10
 
 enum symbol_type {
 	CONST = 1,
-	LABEL
+	LABEL,
+	ARRAY,
+	ADDR
 };
 
 struct symbol {
 	int value;
 	char name[NAME_LEN];
-	enum symbol_type type; 
+	enum symbol_type type;
+	unsigned n_dim;
+	unsigned dim[MAX_DIM]; 
 	struct symbol *next;
 	struct symbol *last;
 };

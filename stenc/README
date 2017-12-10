@@ -1,15 +1,16 @@
 Compilateur stenc
 
 $ make
-$ ./stenc < testX.stenc > testX.s
-$ spim -file testX.s -execute testX.s
+$ ./stenc < test/testX.stenc > test/testX.s
+$ spim -file test/testX.s -execute test/testX.s
 
 Propriétés de la grammaire (liste non exhaustive) :
 - une seule fonction supportée (main, sans argument)
 - un seul type (int) 
 - pas de type abstrait (struct union enum)
-- pas de tableaux (pour le moment)
+- tableaux à 1 ou 2 dimensions uniquement
 - pas de virgules
+- les variables sont toutes globales
 - pas d'évaluation conditionnelle d'id ou d'entier ( int x = 1; if (x) { ... } ) 
 - pas de 'else if'
 - chaque structure conditionelle (boucle, if, etc) doit être suivie de bloc '{' '}' 
@@ -18,9 +19,10 @@ Propriétés de la grammaire (liste non exhaustive) :
 - pas de break; continue;
 - bloc 'anonyme' non recommandé ( int main() { int x = 1;  { /* empty (or not) bloc */ }  return x;}
 - commantaires AINSI (/* */) non supportés
-- pas d'opérateur Unaire (À ajouter pour expr) : &, |, ^, ~,
+- pas d'opérateur Unaire : &, |, ^, ~
 - pas de support pour les expr de type += -= *= /= |= &= ^=
 - pas d'opétateur ternaire ( y = ( x == 13) ? x - z : x + z; )
-- variables initialisées à 0 par défaut
+- variables initialisées à 0 par défaut (sauf pour les tableaux)
 - la grammaire possède un operateur 'print(id);'
-- la fonction principale (main) retourne 0 par défaut
+- aucune action associée à la production 'return' 
+- la fonction principale (main) retourne donc 0 par défaut

@@ -16,7 +16,11 @@ enum operand {
 	GT_C,
 	GE_C,
 	LT_C,
-	LE_C
+	LE_C,
+	LOAD_ARRAY,
+	INDEX,
+	GET_ADDR,
+	GET_VALUE
 };
 
 struct quad {

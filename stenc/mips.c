@@ -15,7 +15,12 @@ static inline void sys_print_code(struct quad *quad)
 
 static inline void assign_code(struct quad *quad)
 {
-	printf("\tlw $t0,%s\n\tsw $t0,%s\n", quad->arg1->name, quad->res->name);	
+	if (quad->res->type == ADDR)
+		printf("\tlw $t0,%s\n\tlw $t1,%s\n\tsw $t0,0($t1)\n", 
+					quad->arg1->name, quad->res->name);
+	else
+		printf("\tlw $t0,%s\n\tsw $t0,%s\n", quad->arg1->name, 
+							quad->res->name);	
 }
 
 static inline void add_code(struct quad *quad)
@@ -88,6 +93,25 @@ static inline void le_code(struct quad *quad)
 			quad->arg1->name, quad->arg2->name, quad->res->name);
 }
 
+static inline void load_array_code(struct quad *quad)
+{
+	printf("\tla $t7,%s\n", quad->arg1->name);
+}
+
+static inline void index_code(struct quad *quad)
+{
+	printf("\tlw $t6,%s\n\tadd $s0,$t6,$t7\n", quad->arg1->name);
+}
+
+static inline void get_addr_code(struct quad *quad)
+{
+	printf("\tsw $s0,%s\n", quad->res->name);
+}
+
+static inline void get_value_code(struct quad *quad)
+{
+	printf("\tlw $t0,0($s0)\n\tsw $t0,%s\n", quad->res->name);
+}
 
 static void text_section(struct quad *quad)
 {
@@ -137,6 +161,18 @@ static void text_section(struct quad *quad)
 		case LE_C:
 			le_code(quad);
 			break;
+		case LOAD_ARRAY:
+			load_array_code(quad);
+			break;
+		case INDEX:
+			index_code(quad);
+			break;
+		case GET_ADDR:
+			get_addr_code(quad);
+			break;
+		case GET_VALUE:
+			get_value_code(quad);
+			break;
 		default:
 			fprintf(stderr, "(%d) unimplemented \n", quad->op);
 			break;
@@ -148,12 +184,21 @@ static void text_section(struct quad *quad)
 
 static void data_section(struct symbol *sym)
 {
+	unsigned space, i;
+
 	printf("\n.data\n");
 	
 	for (; sym; sym = sym->next) {
-		if (sym->type != LABEL)
+		if (sym->type == LABEL)
+			continue;
+		if (sym->type == ARRAY) {
+			for (space = 1, i = 0; i < sym->n_dim; i++)
+				space *= sym->dim[i];
+			printf("\t%s: .space %u\n", sym->name, space * 4);
+		} else {
 			printf("\t%s: .word %d\n", sym->name, 
 				(sym->type == CONST) ? sym->value : 0);
+		}
 	}
 }
 

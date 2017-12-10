@@ -65,10 +65,17 @@ struct symbol *newtemp(struct symbol **table)
 
 void symbol_print(struct symbol *table)
 {
+	int i;
+
 	for (; table; table = table->next) {
 		printf("\t%s", table->name);
 		if (table->type == CONST)
 			printf(": %d", table->value);
+		if (table->type == ARRAY) {
+			printf(": %u_dim ");
+			for (i = 0; i < table->n_dim; i++)
+				printf("%u,", table->dim[i]);
+		}
 		printf("\n");	
 	}
 }
