@@ -1,0 +1,15 @@
+Simplified grammar of the C language to produce code for MIPS architecture. 
+
+ - Supports conditional statements (if else) and loop (for while)
+ - Supports arithmetic on int type
+ - Supports matrix-calculations
+
+
+$ make
+$ ./sccc < test/testX.sc > test/testX.s
+$ spim -file test/testX.s -execute test/testX.s
+
+
+Contributors:
+ Aurélien Rausch
+ Loubna Hennach

@@ -1,4 +1,4 @@
-int main()
+main()
 {
 	int x = 0;
 	int a = 1;
@@ -19,7 +19,7 @@ int main()
 
 	print(x);	//2
 
-	if (!(a < 0 || b < 0)) {
+	if (!(a < 0 || b < 0)) {
 		if (a == 1 && b != 2) {
 			x = x - 1;
 		} else {
@@ -29,5 +29,5 @@ int main()
 	
 	print(x);	// 3
 
-	// le resultat devrait être : "123"
+	// result should be: "123"
 }

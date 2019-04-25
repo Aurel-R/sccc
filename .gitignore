@@ -1,5 +1,4 @@
-stenc/stenc
-expr/expr
+sccc
 *.yy.c
 *.o
 *.s

@@ -1,4 +1,4 @@
-int main()
+main()
 {
 	int i = 0;
 	int x[10];
@@ -12,5 +12,5 @@ int main()
 		print(x[i]);
 	} 
 	
-	// le resultat devrait être : "01234567899876543210"
+	// result should be: "01234567899876543210"
 }

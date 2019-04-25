@@ -1,5 +1,0 @@
-Compilateur expr
-
-$ make
-$ ./expr < example1.expr > expr.s
-$ spim -file expr.s -execute expr.s

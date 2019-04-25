@@ -1,5 +1,0 @@
-a = 7;
-x = a+1;
-print x;
-x = x*x;
-print x

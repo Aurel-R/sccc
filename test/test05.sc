@@ -1,4 +1,4 @@
-int main()
+main()
 {
 	int x = 1;
 	int a = 10;
@@ -33,5 +33,5 @@ int main()
 
 	print(x);	// 5
 	
-	// le resultat devrait être : "12345"
+	// result should be: "12345"
 }

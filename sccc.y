@@ -54,7 +54,7 @@ static struct quad *quad_list = NULL;
 
 %%
 
-axiom: INT MAIN '(' ')' bloc { quad_list = $5.code; };
+axiom: MAIN '(' ')' bloc { quad_list = $4.code; };
 
 bloc: 
   '{' instrlist '}' { $$.code = $2.code; } 

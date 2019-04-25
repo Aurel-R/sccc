@@ -2,8 +2,8 @@ CC = gcc
 LEX = lex
 YACC = yacc -d -v
 CFLAGS = -O2 -Wall
-LDFLAGS = -ly -lfl# Linux: -lfl / OSX: -ll
-EXEC = stenc
+LDFLAGS = -ly -lfl
+EXEC = sccc
 SRC =  symbol.c quad.c mips.c utils.c
 OBJ = $(SRC:.c=.o)
 

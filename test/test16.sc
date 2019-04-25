@@ -1,4 +1,4 @@
-int main()
+main()
 {
 	int x[2][3];
 	int i;
@@ -11,6 +11,5 @@ int main()
 		}
 	}
 
-	// le resultat devrait être : "012123"	
-
+	// result should be: "012123"	
 }
