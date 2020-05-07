@@ -1,7 +1,7 @@
 CC = gcc
 LEX = lex
 YACC = yacc -d -v
-CFLAGS = -O2 -Wall
+CFLAGS = -O2 -Wall -Wextra
 LDFLAGS = -ly -lfl
 EXEC = sccc
 SRC =  symbol.c quad.c mips.c utils.c

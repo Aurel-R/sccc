@@ -15,7 +15,6 @@ struct symbol *symbol_add(struct symbol **table, const char *name)
 {
 	struct symbol *sym;
 
-	/* XXX: check this in lex directly */
 	if (strlen(name) >= NAME_LEN - 1) {
 		fprintf(stderr, "var name lenght '%s' is too long\n", name);
 		return NULL;
@@ -61,23 +60,6 @@ struct symbol *newtemp(struct symbol **table)
 
 	snprintf(name, NAME_LEN, "temp_%d", i++);
 	return symbol_add(table, name);
-}
-
-void symbol_print(struct symbol *table)
-{
-	int i;
-
-	for (; table; table = table->next) {
-		printf("\t%s", table->name);
-		if (table->type == CONST)
-			printf(": %d", table->value);
-		if (table->type == ARRAY) {
-			printf(": %u_dim ");
-			for (i = 0; i < table->n_dim; i++)
-				printf("%u,", table->dim[i]);
-		}
-		printf("\n");	
-	}
 }
 
 void symbol_free(struct symbol *table)

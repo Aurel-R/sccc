@@ -117,5 +117,3 @@ void empty_quad_free(struct empty_quad *list)
 	}
 }
 
-
-

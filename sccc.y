@@ -47,7 +47,10 @@ static struct quad *quad_list = NULL;
 %type <codegen> axiom bloc instrlist instr return x expr single access
 		conditional_struct conditional declaration array_access
 
-%left '+' '*' '/' '-' AND OR
+%left OR
+%left AND
+%left '+' '-'
+%left '*' '/'
 %right '!'
 
 %start axiom
@@ -159,7 +162,8 @@ access:
 | ID array_access {
 	struct symbol *nbo, *tab, *val, *addr, *index;
 	struct quad *q1, *q2, *q3, *q4;
-	struct quad *qi, *qi1 = NULL, *qi2 = NULL; /* XXX: replace by list */	
+	/* XXX: replace with a list */	
+	struct quad *qi, *qi1 = NULL, *qi2 = NULL; 
 
 	tab = symbol_lookup(symbol_table, $1);
 	if (!tab) {
@@ -211,7 +215,7 @@ access:
 	quad_add(&$$.code, $2.code);
 	quad_add(&$$.code, q1);
 	quad_add(&$$.code, qi);
-	quad_add(&$$.code, qi1); /* XXX: add a list */
+	quad_add(&$$.code, qi1); 
 	quad_add(&$$.code, qi2); 
 	quad_add(&$$.code, q2);
 	quad_add(&$$.code, q3);
@@ -562,8 +566,6 @@ int main(void)
 	if (!ret) 
 		mips_gencode(symbol_table, quad_list);		
 
-	/* TODO: replace 'return 1' by an terminate function
-	 * 	 to set quad_list (free under) */
 	quad_free(quad_list);
 	symbol_free(symbol_table);
 	lex_free();

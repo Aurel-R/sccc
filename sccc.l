@@ -26,8 +26,7 @@ number		[0-9]*
 "<="		{ return LE; }
 "//".*		;
 {identifier}	{ yylval.string = strdup(yytext); return ID; }
-{number}	{ /* assume octal to be an int */ 
-		  yylval.value = atoi(yytext); return NUM; }
+{number}	{ yylval.value = atoi(yytext); return NUM; }
 [(){}+\-*/!=;]  { return yytext[0]; }
 [\[\]]		{ return yytext[0]; }
 [[:space:]]	;

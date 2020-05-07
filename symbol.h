@@ -53,11 +53,6 @@ struct symbol *symbol_add(struct symbol **table, const char *name);
  */
 struct symbol *symbol_lookup(struct symbol *table, const char *name);
 /**
- * @brief Afficher la table des symboles.
- * @param table Table des symboles.
- */
-void symbol_print(struct symbol *table);
-/**
  * @brief Liberer la memoire occupee par une table de symboles.
  * @param table Table des symboles.
  */

@@ -6,8 +6,7 @@
 #include "mips.h"
 #include "utils.h"
 
-/* print(id); is considered an operator (not a function) 
- * TODO: Add new line after print */
+/* TODO: Add new line after print */
 static inline void sys_print_code(struct quad *quad)
 {
 	printf("\tli $v0,1\n\tlw $a0,%s\n\tsyscall\n", quad->arg1->name);
